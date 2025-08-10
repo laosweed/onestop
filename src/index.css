@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .mobile-container {
+    @apply max-w-md mx-auto bg-white min-h-screen relative;
+  }
+  
+  /* Mobile header adjustments */
+  .mobile-header {
+    @apply sticky top-0 z-30 bg-white border-b border-gray-200;
+  }
+  
+  /* Sidebar overlay for mobile */
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+  }
+  
+  /* Ensure content doesn't overlap with header */
+  .main-content {
+    @apply pt-0;
+  }
+  
+  /* Responsive adjustments for larger screens */
+  @media (min-width: 1024px) {
+    .mobile-container {
+      @apply max-w-full;
+    }
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-4;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200;
+  }
+  
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .status-active {
+    @apply bg-success-100 text-success-800;
+  }
+  
+  .status-expired {
+    @apply bg-danger-100 text-danger-800;
+  }
+  
+                .status-pending {
+                @apply bg-warning-100 text-warning-800;
+              }
+
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+            }
