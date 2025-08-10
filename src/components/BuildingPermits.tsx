@@ -26,7 +26,8 @@ import {
   Shield,
   BarChart3,
   MessageSquare,
-  Download
+  Download,
+  Calculator
 } from 'lucide-react';
 
 interface BuildingProject {
@@ -1008,8 +1009,8 @@ const BuildingPermits = () => {
         </div>
       )}
 
-      {/* Projects List - Hidden when ESIA or Compliance tabs are active */}
-      {activeTab !== 'esia' && activeTab !== 'compliance' && (
+      {/* Projects List - Hidden when ESIA, Compliance, or Fees tabs are active */}
+      {activeTab !== 'esia' && activeTab !== 'compliance' && activeTab !== 'fees' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Construction Projects</h2>
@@ -1631,6 +1632,352 @@ const BuildingPermits = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fees Tab Content */}
+      {activeTab === 'fees' && (
+        <div className="space-y-6">
+          {/* Fees Overview Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="card text-center">
+              <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-gray-900">$124.5K</div>
+              <div className="text-sm text-gray-600">Total Revenue</div>
+            </div>
+            <div className="card text-center">
+              <Clock className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-gray-900">$18.2K</div>
+              <div className="text-sm text-gray-600">Outstanding</div>
+            </div>
+            <div className="card text-center">
+              <CheckCircle className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-gray-900">85%</div>
+              <div className="text-sm text-gray-600">Collection Rate</div>
+            </div>
+            <div className="card text-center">
+              <AlertTriangle className="w-8 h-8 text-red-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-gray-900">3</div>
+              <div className="text-sm text-gray-600">Overdue</div>
+            </div>
+          </div>
+
+          {/* Fee Categories Breakdown */}
+          <div className="card">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+              Fee Categories Breakdown
+            </h3>
+            <div className="space-y-3">
+              {[
+                {
+                  category: 'Building Permit Fees',
+                  total: 45000,
+                  collected: 42000,
+                  pending: 3000,
+                  projects: 8
+                },
+                {
+                  category: 'ESIA Assessment Fees',
+                  total: 28000,
+                  collected: 25000,
+                  pending: 3000,
+                  projects: 3
+                },
+                {
+                  category: 'Inspection Fees',
+                  total: 18500,
+                  collected: 17500,
+                  pending: 1000,
+                  projects: 12
+                },
+                {
+                  category: 'Compliance Monitoring',
+                  total: 15000,
+                  collected: 12000,
+                  pending: 3000,
+                  projects: 5
+                },
+                {
+                  category: 'Late Payment Penalties',
+                  total: 18000,
+                  collected: 15000,
+                  pending: 3000,
+                  projects: 2
+                }
+              ].map((category, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium text-gray-900">{category.category}</h4>
+                      <p className="text-sm text-gray-600">{category.projects} projects</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-gray-900">
+                        ${category.total.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-gray-600">Total</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Collected:</span>
+                      <span className="font-medium text-green-600">
+                        ${category.collected.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Pending:</span>
+                      <span className="font-medium text-orange-600">
+                        ${category.pending.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-green-500 h-2 rounded-full" 
+                        style={{ width: `${(category.collected / category.total) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Project Fee Details */}
+          <div className="card">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-900 flex items-center">
+                <FileText className="w-5 h-5 mr-2 text-purple-600" />
+                Project Fee Details
+              </h3>
+              <button className="btn-secondary">
+                <Download className="w-4 h-4 mr-2" />
+                Export Report
+              </button>
+            </div>
+            <div className="space-y-3">
+              {[
+                {
+                  project: 'Skyline Tower',
+                  company: 'Urban Development Corp',
+                  permitFee: 15000,
+                  esiaFee: 8000,
+                  inspectionFee: 3500,
+                  totalFees: 26500,
+                  paidAmount: 25000,
+                  status: 'partial',
+                  dueDate: '2024-02-15'
+                },
+                {
+                  project: 'Green Complex',
+                  company: 'EcoBuild Ltd',
+                  permitFee: 12000,
+                  esiaFee: 6000,
+                  inspectionFee: 2800,
+                  totalFees: 20800,
+                  paidAmount: 20800,
+                  status: 'paid',
+                  dueDate: '2024-01-30'
+                },
+                {
+                  project: 'Industrial Hub',
+                  company: 'Manufacturing Inc',
+                  permitFee: 18000,
+                  esiaFee: 12000,
+                  inspectionFee: 4200,
+                  totalFees: 34200,
+                  paidAmount: 30000,
+                  status: 'overdue',
+                  dueDate: '2024-01-15'
+                },
+                {
+                  project: 'Mixed Use Plaza',
+                  company: 'Commercial Properties',
+                  permitFee: 10000,
+                  esiaFee: 5000,
+                  inspectionFee: 2500,
+                  totalFees: 17500,
+                  paidAmount: 17500,
+                  status: 'paid',
+                  dueDate: '2024-01-20'
+                }
+              ].map((project, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{project.project}</h4>
+                      <p className="text-sm text-gray-600">{project.company}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      project.status === 'paid' ? 'bg-green-100 text-green-800' :
+                      project.status === 'partial' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {project.status === 'paid' ? 'Paid' : 
+                       project.status === 'partial' ? 'Partial' : 'Overdue'}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm mb-3">
+                    <div>
+                      <span className="text-gray-500">Permit Fee:</span>
+                      <div className="font-medium">${project.permitFee.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">ESIA Fee:</span>
+                      <div className="font-medium">${project.esiaFee.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Inspection Fee:</span>
+                      <div className="font-medium">${project.inspectionFee.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Total:</span>
+                      <div className="font-semibold">${project.totalFees.toLocaleString()}</div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-600">
+                        Paid: ${project.paidAmount.toLocaleString()} / ${project.totalFees.toLocaleString()}
+                      </span>
+                      <span className="text-sm text-gray-600">Due: {project.dueDate}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          project.status === 'paid' ? 'bg-green-500' :
+                          project.status === 'partial' ? 'bg-yellow-500' :
+                          'bg-red-500'
+                        }`}
+                        style={{ width: `${(project.paidAmount / project.totalFees) * 100}%` }}
+                      ></div>
+                    </div>
+                    {project.status !== 'paid' && (
+                      <div className="mt-2 text-xs text-orange-600">
+                        Outstanding: ${(project.totalFees - project.paidAmount).toLocaleString()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Payment History */}
+          <div className="card">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+              <Calendar className="w-5 h-5 mr-2 text-indigo-600" />
+              Recent Payment History
+            </h3>
+            <div className="space-y-3">
+              {[
+                {
+                  project: 'Green Complex',
+                  amount: 8500,
+                  date: '2024-01-25',
+                  method: 'Bank Transfer',
+                  reference: 'TRX-2024-001',
+                  status: 'completed'
+                },
+                {
+                  project: 'Mixed Use Plaza',
+                  amount: 12000,
+                  date: '2024-01-20',
+                  method: 'Credit Card',
+                  reference: 'CC-2024-015',
+                  status: 'completed'
+                },
+                {
+                  project: 'Skyline Tower',
+                  amount: 15000,
+                  date: '2024-01-18',
+                  method: 'Bank Transfer',
+                  reference: 'TRX-2024-002',
+                  status: 'completed'
+                },
+                {
+                  project: 'Industrial Hub',
+                  amount: 8000,
+                  date: '2024-01-15',
+                  method: 'Check',
+                  reference: 'CHK-2024-008',
+                  status: 'pending'
+                }
+              ].map((payment, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{payment.project}</h4>
+                      <p className="text-sm text-gray-600">
+                        {payment.method} • {payment.reference}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-gray-900">
+                        ${payment.amount.toLocaleString()}
+                      </div>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        payment.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Date: {payment.date}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Fee Calculator */}
+          <div className="card">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+              <Calculator className="w-5 h-5 mr-2 text-green-600" />
+              Fee Calculator
+            </h3>
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                  <option>Residential</option>
+                  <option>Commercial</option>
+                  <option>Industrial</option>
+                  <option>Mixed Use</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Value ($)
+                </label>
+                <input 
+                  type="number" 
+                  placeholder="Enter project value"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Floor Area (sq ft)
+                </label>
+                <input 
+                  type="number" 
+                  placeholder="Enter floor area"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+              <button className="btn-primary">
+                Calculate Fees
+              </button>
             </div>
           </div>
         </div>
