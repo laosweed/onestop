@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Home, Building, Car, Truck, FileText } from 'lucide-react';
+import { Home, Building, Car, Truck, FileText, Ship, AlertTriangle } from 'lucide-react';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import LicensingManagement from './components/LicensingManagement';
 import BuildingPermits from './components/BuildingPermits';
 import VehicleRegistration from './components/VehicleRegistration';
 import OverseasTruckPermission from './components/OverseasTruckPermission';
+import MaritimeManagement from './components/MaritimeManagement';
+import IncidentManagement from './components/IncidentManagement';
 import ViewReports from './components/ViewReports';
 import BottomNavigation from './components/BottomNavigation';
 import MobileSidebar from './components/MobileSidebar';
@@ -25,6 +27,8 @@ const AppContent: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
       case '/building': return 'Building Permits';
       case '/vehicles': return 'Vehicle Registration';
       case '/overseas': return 'Overseas Permission';
+      case '/maritime': return 'Maritime Management';
+      case '/incidents': return 'Incident Management';
       case '/reports': return 'Reports & Analytics';
       default: return 'Public Service';
     }
@@ -62,6 +66,8 @@ const AppContent: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
           <Route path="/building" element={<BuildingPermits />} />
           <Route path="/vehicles" element={<VehicleRegistration />} />
           <Route path="/overseas" element={<OverseasTruckPermission />} />
+          <Route path="/maritime" element={<MaritimeManagement />} />
+          <Route path="/incidents" element={<IncidentManagement />} />
           <Route path="/reports" element={<ViewReports />} />
         </Routes>
       </div>

@@ -5,8 +5,9 @@ import {
   Building, 
   Car, 
   Truck, 
-  TrendingUp, 
+  Ship,
   AlertTriangle,
+  TrendingUp, 
   CheckCircle,
   Clock,
   Plus,
@@ -112,6 +113,44 @@ const Dashboard = () => {
         trend: '+5%',
         trendDirection: 'up'
       }
+    },
+    {
+      id: 'maritime',
+      title: 'Maritime Management',
+      subtitle: 'Vessels & Port Operations',
+      icon: Ship,
+      path: '/maritime',
+      color: 'from-cyan-500 to-cyan-600',
+      bgColor: 'bg-cyan-50',
+      iconColor: 'text-cyan-600',
+      stats: { active: 45, expired: 3, pending: 8 },
+      priority: 'high',
+      chartData: {
+        monthly: [35, 38, 40, 42, 45, 43, 47, 45, 48, 46, 50, 45],
+        categories: ['Cargo Vessels', 'Container Ships', 'Fishing Boats', 'Tankers'],
+        categoryData: [45, 30, 15, 10],
+        trend: '+18%',
+        trendDirection: 'up'
+      }
+    },
+    {
+      id: 'incidents',
+      title: 'Incident Management',
+      subtitle: 'Safety & Security',
+      icon: AlertTriangle,
+      path: '/incidents',
+      color: 'from-red-500 to-red-600',
+      bgColor: 'bg-red-50',
+      iconColor: 'text-red-600',
+      stats: { active: 4, expired: 0, pending: 2 },
+      priority: 'high',
+      chartData: {
+        monthly: [2, 3, 4, 3, 5, 4, 6, 5, 7, 6, 8, 4],
+        categories: ['Safety', 'Security', 'Environmental', 'Operational'],
+        categoryData: [40, 25, 20, 15],
+        trend: '+12%',
+        trendDirection: 'up'
+      }
     }
   ];
 
@@ -202,25 +241,7 @@ const Dashboard = () => {
 
 
 
-      {/* Enhanced Quick Stats with Trends */}
-      <div className="grid grid-cols-3 gap-3">
-        {quickStats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <div key={index} className={`${stat.bgColor} rounded-xl p-4 text-center border border-gray-100`}>
-              <Icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-              <div className="text-xs text-gray-600 font-medium">{stat.label}</div>
-              <div className={`flex items-center justify-center space-x-1 text-xs mt-1 ${
-                stat.trend === 'up' ? 'text-success-600' : 'text-danger-600'
-              }`}>
-                {stat.trend === 'up' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-                <span>{stat.change}</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      
 
       {/* Services as Icons Grid */}
       <div className="space-y-4">
@@ -234,8 +255,8 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/* Services Icons Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Services Horizontal Scroll */}
+        <div className="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide">
           {serviceCategories.map((service, index) => {
             const Icon = service.icon;
             
@@ -243,12 +264,12 @@ const Dashboard = () => {
               <div
                 key={index}
                 onClick={() => navigate(service.path)}
-                className="bg-white rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-gray-200 text-center group"
+                className="bg-white rounded-xl p-3 cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-gray-200 text-center group flex-shrink-0 w-40"
               >
                 {/* Service Icon Container */}
                 <div className="relative mb-3">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} text-white shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105`}>
-                    <Icon size={28} />
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} text-white shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105`}>
+                    <Icon size={24} />
                   </div>
                   
                   {/* Status Indicator */}
@@ -264,7 +285,7 @@ const Dashboard = () => {
                 <h3 className="font-semibold text-gray-900 text-sm mb-1">{service.title}</h3>
                 
                 {/* Service Subtitle */}
-                <p className="text-xs text-gray-500 mb-3">{service.subtitle}</p>
+                <p className="text-xs text-gray-500 mb-2">{service.subtitle}</p>
                 
                 {/* Quick Stats */}
                 <div className="flex items-center justify-center space-x-3 text-xs">

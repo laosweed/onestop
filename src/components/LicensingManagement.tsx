@@ -60,6 +60,8 @@ const LicensingManagement = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [selectedLicense, setSelectedLicense] = useState<License | null>(null);
   const [applicationForm, setApplicationForm] = useState<ApplicationForm>({
     companyName: '',
     licenseType: '',
@@ -374,6 +376,7 @@ const LicensingManagement = () => {
   );
 
   return (
+    <>
     <div className="p-4 space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-3">
@@ -533,7 +536,13 @@ const LicensingManagement = () => {
                     <span>Expires: {license.expiryDate}</span>
                   </div>
                   <div className="flex space-x-2">
-                    <button className="p-1 text-gray-400 hover:text-gray-600">
+                    <button 
+                      onClick={() => {
+                        setSelectedLicense(license);
+                        setShowPreviewModal(true);
+                      }}
+                      className="p-1 text-gray-400 hover:text-gray-600"
+                    >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button className="p-1 text-gray-400 hover:text-gray-600">
@@ -731,9 +740,443 @@ const LicensingManagement = () => {
 
 
 
+      {/* License Preview Modal */}
+      {showPreviewModal && selectedLicense && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">License Details</h2>
+                <p className="text-sm text-gray-600">Complete license information and status</p>
+              </div>
+          <button 
+                onClick={() => setShowPreviewModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+                <X className="w-5 h-5 text-gray-500" />
+          </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Company Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Building className="w-5 h-5 mr-2 text-blue-600" />
+                  Company Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.companyName}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">License Type</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.type}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Registration Number</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.registrationNumber}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.licenseNumber}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Financial Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <DollarSign className="w-5 h-5 mr-2 text-green-600" />
+                  Financial Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Registered Capital</label>
+                    <div className="text-lg font-bold text-green-600">${selectedLicense.capital.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Specialists</label>
+                    <div className="text-lg font-bold text-blue-600">{selectedLicense.specialists}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* License Status */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-purple-600" />
+                  License Status
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Current Status</label>
+                    <div className="flex items-center space-x-2">
+                      {getStatusBadge(selectedLicense.status)}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Renewal Status</label>
+                    <div className="flex items-center space-x-2">
+                      {getRenewalBadge(selectedLicense.renewalStatus)}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.expiryDate}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Days Remaining</label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {(() => {
+                        const today = new Date();
+                        const expiry = new Date(selectedLicense.expiryDate);
+                        const diffTime = expiry.getTime() - today.getTime();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        return diffDays > 0 ? `${diffDays} days` : `${Math.abs(diffDays)} days overdue`;
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Documents */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <FolderOpen className="w-5 h-5 mr-2 text-orange-600" />
+                  Required Documents
+                </h3>
+                <div className="space-y-2">
+                  {selectedLicense.documents.map((doc, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <FileText className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm text-gray-900">{doc}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Uploaded</span>
+                        <button className="p-1 text-blue-600 hover:text-blue-800">
+                          <Download className="w-4 h-4" />
+          </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* License Timeline */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-indigo-600" />
+                  License Timeline
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">License Issued</div>
+                      <div className="text-xs text-gray-600">January 15, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">First Inspection</div>
+                      <div className="text-xs text-gray-600">February 20, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">Renewal Notice Sent</div>
+                      <div className="text-xs text-gray-600">March 1, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">License Expires</div>
+                      <div className="text-xs text-gray-600">{selectedLicense.expiryDate}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compliance Status */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+                  Compliance Status
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Tax Compliance</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Safety Standards</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Insurance Coverage</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Environmental Compliance</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex space-x-3 p-6 border-t border-gray-200">
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="flex-1 btn-secondary"
+              >
+                Close
+          </button>
+              <button className="flex-1 btn-primary flex items-center justify-center space-x-2">
+                <Download className="w-4 h-4" />
+                <span>Download License</span>
+          </button>
+        </div>
+      </div>
+        </div>
+      )}
+
+      </div>
+
+      {/* License Preview Modal */}
+      {showPreviewModal && selectedLicense && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">License Details</h2>
+                <p className="text-sm text-gray-600">Complete license information and status</p>
+              </div>
+              <button 
+                onClick={() => setShowPreviewModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Company Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Building className="w-5 h-5 mr-2 text-blue-600" />
+                  Company Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.companyName}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">License Type</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.type}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Registration Number</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.registrationNumber}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.licenseNumber}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Financial Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <DollarSign className="w-5 h-5 mr-2 text-green-600" />
+                  Financial Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Registered Capital</label>
+                    <div className="text-lg font-bold text-green-600">${selectedLicense.capital.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Specialists</label>
+                    <div className="text-lg font-bold text-blue-600">{selectedLicense.specialists}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* License Status */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-purple-600" />
+                  License Status
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Current Status</label>
+                    <div className="flex items-center space-x-2">
+                      {getStatusBadge(selectedLicense.status)}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Renewal Status</label>
+                    <div className="flex items-center space-x-2">
+                      {getRenewalBadge(selectedLicense.renewalStatus)}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                    <div className="text-sm text-gray-900 font-medium">{selectedLicense.expiryDate}</div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Days Remaining</label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {(() => {
+                        const today = new Date();
+                        const expiry = new Date(selectedLicense.expiryDate);
+                        const diffTime = expiry.getTime() - today.getTime();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        return diffDays > 0 ? `${diffDays} days` : `${Math.abs(diffDays)} days overdue`;
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Documents */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <FolderOpen className="w-5 h-5 mr-2 text-orange-600" />
+                  Required Documents
+                </h3>
+                <div className="space-y-2">
+                  {selectedLicense.documents.map((doc, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <FileText className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm text-gray-900">{doc}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Uploaded</span>
+                        <button className="p-1 text-blue-600 hover:text-blue-800">
+                          <Download className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* License Timeline */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-indigo-600" />
+                  License Timeline
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">License Issued</div>
+                      <div className="text-xs text-gray-600">January 15, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">First Inspection</div>
+                      <div className="text-xs text-gray-600">February 20, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">Renewal Notice Sent</div>
+                      <div className="text-xs text-gray-600">March 1, 2024</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900">License Expires</div>
+                      <div className="text-xs text-gray-600">{selectedLicense.expiryDate}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compliance Status */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+                  Compliance Status
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Tax Compliance</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Safety Standards</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Insurance Coverage</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Environmental Compliance</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex space-x-3 p-6 border-t border-gray-200">
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="flex-1 btn-secondary"
+              >
+                Close
+              </button>
+              <button className="flex-1 btn-primary flex items-center justify-center space-x-2">
+                <Download className="w-4 h-4" />
+                <span>Download License</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Application Form Modal */}
       {showApplicationForm && <ApplicationFormModal />}
-    </div>
+    </>
   );
 };
 

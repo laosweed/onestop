@@ -6,6 +6,11 @@ import {
   Car, 
   Truck, 
   FileText, 
+  Ship,
+  Anchor,
+  Navigation,
+  AlertTriangle,
+  TrendingUp,
   X, 
   User, 
   Settings, 
@@ -106,6 +111,32 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, onLogout
         { icon: FileText, label: 'Documentation', action: 'overseas-docs' }
       ]
     },
+    { 
+      path: '/maritime', 
+      icon: Ship, 
+      label: 'Maritime Management', 
+      description: 'Vessels & Port Operations',
+      quickActions: [
+        { icon: Plus, label: 'Register Vessel', action: 'maritime-vessel' },
+        { icon: Anchor, label: 'Port Operations', action: 'maritime-operations' },
+        { icon: FileText, label: 'Maritime Permits', action: 'maritime-permits' },
+        { icon: Shield, label: 'Safety Compliance', action: 'maritime-safety' },
+        { icon: Navigation, label: 'Vessel Tracking', action: 'maritime-tracking' }
+      ]
+    },
+    { 
+      path: '/incidents', 
+      icon: AlertTriangle, 
+      label: 'Incident Management', 
+      description: 'Safety & Security',
+      quickActions: [
+        { icon: Plus, label: 'Report Incident', action: 'incident-report' },
+        { icon: AlertTriangle, label: 'Active Incidents', action: 'incident-active' },
+        { icon: FileText, label: 'Incident Reports', action: 'incident-reports' },
+        { icon: TrendingUp, label: 'Analytics', action: 'incident-analytics' },
+        { icon: Shield, label: 'Prevention', action: 'incident-prevention' }
+      ]
+    },
   ];
 
   const bottomNavItems = [
@@ -141,6 +172,16 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, onLogout
       case 'building-new':
       case 'vehicle-register':
       case 'overseas-new':
+      case 'maritime-vessel':
+      case 'maritime-operations':
+      case 'maritime-permits':
+      case 'maritime-safety':
+      case 'maritime-tracking':
+      case 'incident-report':
+      case 'incident-active':
+      case 'incident-reports':
+      case 'incident-analytics':
+      case 'incident-prevention':
         console.log(`Quick action: ${action}`);
         // These could trigger modals or navigate to specific forms
         break;
@@ -173,7 +214,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, onLogout
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-primary-600 to-blue-600">
           <div className="flex items-center space-x-3">
-            <Shield className="w-8 h-8 text-white" />
+            <img src="/pwt.png" alt="PWT Logo" className="w-8 h-8 object-contain" />
             <div>
               <h2 className="text-lg font-bold text-white">Public Service</h2>
               <p className="text-xs text-primary-100">Mobile Portal</p>

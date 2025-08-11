@@ -402,7 +402,7 @@ const OverseasTruckPermission = () => {
           </div>
 
           {/* Live GPS Tracking */}
-          <div className="card">
+      <div className="card">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center">
                 <Navigation className="w-5 h-5 mr-2 text-green-600" />
@@ -411,7 +411,7 @@ const OverseasTruckPermission = () => {
               <button className="btn-secondary">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
-              </button>
+          </button>
             </div>
             <div className="space-y-3">
               {[
@@ -793,7 +793,7 @@ const OverseasTruckPermission = () => {
               <button className="btn-secondary">
                 <Download className="w-4 h-4 mr-2" />
                 Export Report
-              </button>
+          </button>
             </div>
             <div className="space-y-3">
               {[
@@ -1043,9 +1043,9 @@ const OverseasTruckPermission = () => {
               </div>
               <button className="btn-primary">
                 Calculate Fees
-              </button>
-            </div>
-          </div>
+          </button>
+        </div>
+      </div>
         </div>
       )}
 

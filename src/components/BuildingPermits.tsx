@@ -1011,19 +1011,19 @@ const BuildingPermits = () => {
 
       {/* Projects List - Hidden when ESIA, Compliance, or Fees tabs are active */}
       {activeTab !== 'esia' && activeTab !== 'compliance' && activeTab !== 'fees' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Construction Projects</h2>
-            <button 
-              onClick={() => setShowNewProjectForm(true)}
-              className="btn-primary flex items-center space-x-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>New Project</span>
-            </button>
-          </div>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">Construction Projects</h2>
+          <button 
+            onClick={() => setShowNewProjectForm(true)}
+            className="btn-primary flex items-center space-x-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Project</span>
+          </button>
+        </div>
 
-          {filteredProjects.map((project) => (
+        {filteredProjects.map((project) => (
           <div key={project.id} className="card">
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -1091,7 +1091,7 @@ const BuildingPermits = () => {
             </div>
           </div>
           ))}
-        </div>
+      </div>
       )}
 
       {/* ESIA Tab Content */}
@@ -1407,7 +1407,7 @@ const BuildingPermits = () => {
           </div>
 
           {/* Regulatory Requirements */}
-          <div className="card">
+      <div className="card">
             <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2 text-blue-600" />
               Regulatory Requirements
@@ -1480,7 +1480,7 @@ const BuildingPermits = () => {
               <button className="btn-secondary">
                 <Plus className="w-4 h-4 mr-2" />
                 Schedule Inspection
-              </button>
+          </button>
             </div>
             <div className="space-y-3">
               {[
@@ -1756,7 +1756,7 @@ const BuildingPermits = () => {
               <button className="btn-secondary">
                 <Download className="w-4 h-4 mr-2" />
                 Export Report
-              </button>
+          </button>
             </div>
             <div className="space-y-3">
               {[
@@ -1977,9 +1977,9 @@ const BuildingPermits = () => {
               </div>
               <button className="btn-primary">
                 Calculate Fees
-              </button>
-            </div>
-          </div>
+          </button>
+        </div>
+      </div>
         </div>
       )}
 

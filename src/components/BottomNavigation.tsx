@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Building, Car, Truck, FileText } from 'lucide-react';
+import { Home, Building, Car, Truck, FileText, Ship, AlertTriangle } from 'lucide-react';
 import { cn } from '../utils/cn';
 
 interface BottomNavigationProps {
@@ -17,6 +17,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onLogout }) => {
     { path: '/building', icon: Building, label: 'Building' },
     { path: '/vehicles', icon: Car, label: 'Vehicles' },
     { path: '/overseas', icon: Truck, label: 'Overseas' },
+    { path: '/maritime', icon: Ship, label: 'Maritime' },
+    { path: '/incidents', icon: AlertTriangle, label: 'Incidents' },
   ];
 
   return (
